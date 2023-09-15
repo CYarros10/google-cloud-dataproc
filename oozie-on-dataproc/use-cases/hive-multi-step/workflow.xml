@@ -1,0 +1,59 @@
+<!-- Sample workflow for single Hive Script -->
+<workflow-app xmlns = "uri:oozie:workflow:1.0" name = "${scriptName}">
+    <credentials>
+        <credential name="hs2-creds" type="hive2">
+            <property>
+                <name>hive2.server.principal</name>
+                <value>${jdbcPrincipal}</value>
+            </property>
+            <property>
+                <name>hive2.jdbc.url</name>
+                <value>${jdbcURL}</value>
+            </property>
+        </credential>
+    </credentials>
+    
+    <start to="hive2-node"/>
+
+    <action name="hive2-node"  cred="hs2-creds">
+      <hive2 xmlns = "uri:oozie:hive2-action:1.0">
+        <resource-manager>${resourceManager}</resource-manager>
+        <name-node>${nameNode}</name-node>
+        <configuration>
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+        </configuration>
+			<jdbc-url>${jdbcURL}</jdbc-url>
+         <script>${appPath}/scripts/comments_raw.hql</script>
+      </hive2>
+		<ok to="All_Formats"/>
+      <error to = "kill_job" />
+   </action>
+   <action name = "All_Formats">
+      <hive2 xmlns = "uri:oozie:hive2-action:1.0">
+        <resource-manager>${resourceManager}</resource-manager>
+        <name-node>${nameNode}</name-node>
+        <job-xml>${appPath}/hive-site.xml</job-xml>
+        <configuration>
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+            <property>
+               <name>hive.metastore.uris</name>
+               <value>thrift://bq-export-sandbox-dp-cluster-oozie-m:9083</value>
+            </property>
+        </configuration>
+			<jdbc-url>${jdbcURL}</jdbc-url>
+         <script>${appPath}/scripts/all_formats_external.hql</script>
+      </hive2>
+		<ok to="end"/>
+      <error to = "kill_job" />
+   </action>
+   <kill name = "kill_job">
+      <message>Hive2 (Beeline) action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+   </kill>
+   <end name = "end" />
+</workflow-app>

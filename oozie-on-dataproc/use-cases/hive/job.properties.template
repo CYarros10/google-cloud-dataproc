@@ -1,0 +1,9 @@
+nameNode=hdfs://%%HOST_NAME%%:8020
+resourceManager=%%HOST_NAME%%:8032
+queueName=default
+appPath=${nameNode}/user/${user.name}/oozie/apps/%%USE_CASE%%
+scriptName=%%SCRIPT%%
+jdbcURL=jdbc:hive2://%%HOST_NAME%%:10000/default
+
+oozie.use.system.libpath=true
+oozie.wf.application.path=${appPath}

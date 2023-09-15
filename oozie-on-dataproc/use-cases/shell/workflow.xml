@@ -1,0 +1,20 @@
+<workflow-app name="sample-wf" xmlns="uri:oozie:workflow:0.1">
+ <start to = "gcloud_example" />
+ <action name="gcloud_example">
+  <shell xmlns="uri:oozie:shell-action:0.1">
+   <job-tracker>${jobTracker}</job-tracker>
+   <name-node>${nameNode}</name-node>
+   <exec>gcloud-submit.sh</exec>
+   <argument>${cluster}</argument>
+   <argument>${region}</argument>
+   <file>${appPath}/scripts/gcloud-submit.sh</file>
+   <file>${appPath}/scripts/sample.hql</file>
+  </shell>
+   <ok to="end"/>
+   <error to = "kill_job" />
+  </action>
+   <kill name = "kill_job">
+      <message>gcloud command did not execute</message>
+   </kill>
+   <end name = "end" />
+</workflow-app>

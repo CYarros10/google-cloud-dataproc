@@ -1,0 +1,1 @@
+gcloud dataproc jobs submit hive --cluster=$1 --region=$2 --file=sample.hql

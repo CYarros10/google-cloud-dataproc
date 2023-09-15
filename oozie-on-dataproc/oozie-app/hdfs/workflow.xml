@@ -1,0 +1,33 @@
+<workflow-app name="shell-multi-step" xmlns="uri:oozie:workflow:0.1">
+ <start to = "gcloud_1" />
+ <action name="gcloud_1">
+  <shell xmlns="uri:oozie:shell-action:0.1">
+   <job-tracker>${jobTracker}</job-tracker>
+   <name-node>${nameNode}</name-node>
+   <exec>gcloud-submit-1.sh</exec>
+   <argument>${cluster}</argument>
+   <argument>${region}</argument>
+   <file>${appPath}/scripts/gcloud-submit-1.sh</file>
+   <file>${appPath}/scripts/script-1.hql</file>
+  </shell>
+   <ok to="gcloud_2"/>
+   <error to = "kill_job" />
+  </action>
+   <action name="gcloud_2">
+  <shell xmlns="uri:oozie:shell-action:0.1">
+   <job-tracker>${jobTracker}</job-tracker>
+   <name-node>${nameNode}</name-node>
+   <exec>gcloud-submit-2.sh</exec>
+   <argument>${cluster}</argument>
+   <argument>${region}</argument>
+   <file>${appPath}/scripts/gcloud-submit-2.sh</file>
+   <file>${appPath}/scripts/script-2.hql</file>
+  </shell>
+   <ok to="end"/>
+   <error to = "kill_job" />
+  </action>
+   <kill name = "kill_job">
+      <message>gcloud command did not execute</message>
+   </kill>
+   <end name = "end" />
+</workflow-app>

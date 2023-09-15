@@ -1,0 +1,29 @@
+<!-- Sample workflow for single Hive Script -->
+<workflow-app xmlns = "uri:oozie:workflow:1.0" name = "${scriptName}">
+   <start to = "Step_1" />
+   <!-- Step 1 -->
+   <action name = "Step_1">
+      <hive2 xmlns = "uri:oozie:hive2-action:1.0">
+        <resource-manager>${resourceManager}</resource-manager>
+        <name-node>${nameNode}</name-node>
+        <prepare>
+            <delete path="${appPath}/output-data/hive2"/>
+            <mkdir path="${appPath}/output-data"/>
+        </prepare>
+        <configuration>
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+        </configuration>
+				 <jdbc-url>${jdbcURL}</jdbc-url>
+         <script>${appPath}/scripts/${scriptName}</script>
+      </hive2>
+		<ok to="end"/>
+      <error to = "kill_job" />
+   </action>
+   <kill name = "kill_job">
+      <message>Hive2 (Beeline) action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+   </kill>
+   <end name = "end" />
+</workflow-app>

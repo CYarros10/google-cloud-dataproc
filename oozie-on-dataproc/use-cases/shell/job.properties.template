@@ -1,0 +1,9 @@
+nameNode=hdfs://%%HOST_NAME%%:8020
+jobTracker=%%HOST_NAME%%:8032
+queueName=default
+appPath=${nameNode}/user/${user.name}/oozie/apps/%%USE_CASE%%
+cluster=%%CLUSTER%%
+region=%%REGION%%
+
+oozie.use.system.libpath=true
+oozie.wf.application.path=${appPath}
