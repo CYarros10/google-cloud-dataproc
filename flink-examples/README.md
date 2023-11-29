@@ -19,7 +19,7 @@ gcloud dataproc clusters create ${CLUSTER_NAME} --enable-component-gateway \
 --project "${PROJECT}"
 ```
 
-5. SSH into the Dataproc Cluster and ensure these jars exist:
+5. SSH into the Dataproc Cluster and ensure these jars exist in `/lib/flink/lib':
 
 retrieve any you might be missing here: https://mvnrepository.com/artifact/org.apache.flink
 
